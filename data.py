@@ -1,17 +1,19 @@
 import os
 import re
 import codecs
+from string import punctuation
 from xml.sax.saxutils import escape
 import xml.etree.ElementTree as ET
 from lxml import etree
 import pandas as pd
+from nltk.corpus import stopwords
 
 # parser = ET.XMLParser(encoding="utf-8")
 parser = etree.XMLParser(recover=True)
 
 
-def from_xml_to_plain_text():
-    source_dir = os.getcwd() + "/data/blogs/top100/"
+def from_xml_to_plain_text(lower_case= False, remove_punctuation=False, remove_stopwors=False):
+    source_dir = os.getcwd() + "/data/blogs/top90-100/"
     dest_dir = os.getcwd() + "/data/plainblogs/"
     if not os.path.exists(dest_dir):
         print("Create directory: " + dest_dir)
@@ -35,6 +37,18 @@ def from_xml_to_plain_text():
             posts = ""
             for post in root.iter('post'):
                 clean_post = post.text.strip()
+
+                if lower_case:
+                    clean_post = clean_post.lower()
+
+                if remove_punctuation:
+                    translation = str.maketrans("", "", punctuation)
+                    clean_post = clean_post.translate(translation)
+
+                if remove_stopwors:
+                    stop_words = set(stopwords.words('english'))
+                    clean_post = ' '.join([word for word in clean_post.split() if word not in stop_words])
+
                 posts += clean_post + "\n"
 
             # remove last \n

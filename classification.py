@@ -70,7 +70,7 @@ def train_model(trainset):
     #
     # model.fit(X=matrix.toarray(), y=np.asarray(classes))
     #
-    # predicted = model.predict(matrix.toarray())
+    # y_pred = model.predict(matrix.toarray())
     # cm = confusion_matrix(classes, predicted)
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
