@@ -71,7 +71,7 @@ def load_corpus(input_dir):
     for f in trainfiles:
 
         label = f
-        df = pd.read_csv(input_dir + "/" + f, sep='\n', header=None)
+        df = pd.read_csv(input_dir + "/" + f, sep='\n', header=None,error_bad_lines=False)
 
         for row in df.iterrows():
             text = row[1][0]

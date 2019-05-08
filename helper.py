@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix
 from sklearn.utils.multiclass import unique_labels
 
+size = 7
 
 # https://scikit-learn.org/stable/auto_examples/model_selection/plot_confusion_matrix.html#sphx-glr-auto-examples-model-selection-plot-confusion-matrix-py
 def print_and_plot_confusion_matrix(y_true, y_pred, classes,
@@ -29,6 +30,7 @@ def print_and_plot_confusion_matrix(y_true, y_pred, classes,
 
     print('Confusion matrix, without normalization')
     print(cm)
+    
     plot_confusion_matrix(cm, cmap, classes, title, False)
 
     if normalize:
@@ -36,10 +38,17 @@ def print_and_plot_confusion_matrix(y_true, y_pred, classes,
         # cm = cm.round(decimals=2)
         print("Normalized confusion matrix")
         print(cm)
+
+        for i in range(len(cm)):
+            cm[i][i] = 0		
+        
+        cm = cm * 100
+        cm = cm.astype(int)
         plot_confusion_matrix(cm, cmap, classes, title, normalize)
 
 
 def plot_confusion_matrix(cm, cmap, classes, title, normalize):
+    global size
     fig, ax = plt.subplots()
     im = ax.imshow(cm, interpolation='nearest', cmap=cmap)
     ax.figure.colorbar(im, ax=ax)
@@ -65,5 +74,11 @@ def plot_confusion_matrix(cm, cmap, classes, title, normalize):
                     ha="center", va="center",
                     color="white" if cm[i, j] > thresh else "black")
     fig.tight_layout()
-    plt.show()
+    
+    fig.set_figheight(size)
+    fig.set_figwidth(size)
+
+    #plt.annotate(fontsize=1)
+    plt.savefig(title+".pdf",format="pdf")
+    
     return ax
