@@ -20,6 +20,9 @@ from sklearn.model_selection import train_test_split
 
 
 # https://www.slideshare.net/PyData/authorship-attribution-forensic-linguistics-with-python-scikit-learn-pandas-kostas-perifanos
+from helper import print_and_plot_confusion_matrix
+
+
 def train_model(trainset):
     # create two blocks of features, word anc character ngrams, size of 2
     # we can also append here multiple other features in general
@@ -53,6 +56,7 @@ def train_model(trainset):
     y = np.asarray(classes)
 
     model = LinearSVC(loss='hinge', dual=True)
+    # model = KNeighborsClassifier()
 
     # scores = cross_val_score(estimator=model,
     #                          X=matrix.toarray(),
@@ -71,8 +75,15 @@ def train_model(trainset):
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
     y_pred = model.fit(X_train, y_train).predict(X_test)
-    cm = confusion_matrix(y_test, y_pred)
 
-    print(cm)
+    # cm = confusion_matrix(y_test, y_pred)
+    # print(cm)
+
+    model_name = str(model).split('(')[0]
+    unique_labels = np.unique(y_test)
+    unique_labels = ['.'.join(label.split('.')[:4]) for label in unique_labels]
+    print_and_plot_confusion_matrix(y_test, y_pred, unique_labels, True, model_name + " Confusion Matrix")
+
     print(classification_report(y_test, y_pred))
     print("Accuracy", accuracy_score(y_test, y_pred))
+
